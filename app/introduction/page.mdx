@@ -1,0 +1,26 @@
+# What is Veil Credit Scoring?
+
+**Veil is a privacy-preserving credit scoring protocol built for Midnight.**
+
+At a high level:
+
+- Behavior and score details remain in private state (witness-managed).
+- Public chain state contains commitments and indexes needed for verification.
+- Approved issuers submit behavior events that influence user score accumulators.
+- Recomputed scores can be converted into PoT NFTs to prove trust status without revealing raw activity history.
+
+The result is a composable trust layer that protocols can consume while preserving user confidentiality.
+
+[Learn more](https://veil-credit-scoring-protocol.vercel.app/#)
+
+---
+
+# Why Veil in Midnight DeFi
+
+Midnight applications need user risk signals but should not require identity leakage or full transaction history disclosure.
+
+**Veil** addresses that gap:
+
+- Lending and yield protocols can condition risk parameters on trust status.
+- Integrators can verify trust claims via PoT flows rather than building isolated credit engines.
+- Users can carry reputation between protocols without exposing sensitive details.
