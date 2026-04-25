@@ -1,9 +1,9 @@
-import { Footer, Layout, Navbar } from "nextra-theme-docs";
+import { Layout, Navbar } from "nextra-theme-docs";
 import { Head } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
+import {SearchWithCallback} from "./components/Search";
 import "nextra-theme-docs/style.css";
 import "./globals.css";
-import Image from "next/image";
 
 export const metadata = {
   title: "Veil Credit Scoring Documentation",
@@ -13,19 +13,7 @@ export const metadata = {
 
 const navbar = <Navbar logo={<p className="font-bold">Veil</p>} />;
 
-// const footer = (
-//   <Footer className="dark:bg-[#0a0a0a] bg-[#ededed] w-screen">
-//     <div className="flex items-center gap-2">
-//       <Image
-//         src={"/lucent-labs-logo.png"}
-//         alt="Lucent Labs Logo"
-//         width={30}
-//         height={30}
-//       ></Image>
-//       <p>Powered by Lucent Labs</p>
-//     </div>
-//   </Footer>
-// );
+
 
 export default async function RootLayout({
   children,
@@ -41,14 +29,13 @@ export default async function RootLayout({
       // Suggested by `next-themes` package https://github.com/pacocoursey/next-themes#with-app
       suppressHydrationWarning
     >
-      <Head
-      // ... Your additional head options
-      >
+      <Head>
         {/* Your additional tags should be passed as `children` of `<Head>` element */}
       </Head>
       <body>
         <Layout
           navbar={navbar}
+          search={<SearchWithCallback />}
           pageMap={await getPageMap()}
           docsRepositoryBase="https://github.com/shuding/nextra/tree/main/docs"
           darkMode={true}
