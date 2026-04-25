@@ -1,0 +1,41 @@
+<br />
+
+# Running the Protocol
+
+This section provides instructions on how to run the protocol locally in different development modes for testing purposes.
+
+The CLI provides an interactive menu that exercises the full protocol flow. It supports three environments:
+
+### Standalone (Local)
+
+Runs against a local Midnight environment spun up via Docker containers (Midnight node + proof server). No real funds required.
+
+```sh
+cd packages/cli
+bun run standalone
+```
+
+### Preview Network
+
+Runs against the Midnight Preview testnet. Requires a funded wallet (use the Preview faucet).
+
+```sh
+cd packages/cli
+bun run preview-remote
+```
+
+### Preprod Network
+
+Runs against the Midnight Preprod testnet. Requires a funded wallet (use the Preprod faucet).
+
+```sh
+cd packages/cli
+bun run preprod-remote
+```
+
+**Remote network notes:**
+
+- On first launch you will be prompted to create a fresh wallet or restore from a seed phrase.
+- The CLI will request unshielded NIGHT tokens and generate dust tokens automatically when needed for shielded transactions.
+- A local proof server is started via Docker even in remote mode — allow up to 10 minutes for the proof server to become healthy on first run.
+- All logs are written to `packages/cli/logs/<mode>/<timestamp>.log.`

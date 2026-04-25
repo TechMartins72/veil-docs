@@ -1,1 +1,56 @@
-# Local Set-up
+import { Table } from "nextra/components";
+
+<br />
+
+# Actors
+
+<br />
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Actor</Table.Th>
+      <Table.Th>Role</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>Credit Score User</Table.Td>
+      <Table.Td>
+        Generates Veil ID, registers score entry, mints/renews PoT NFT
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Issuer</Table.Td>
+      <Table.Td>
+        Registered DeFi protocol; submits behavior events, verifies user trust
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Super Admin</Table.Td>
+      <Table.Td>
+        Bootstrap authority; registers first admin and issuers, initializes
+        configs
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Admin</Table.Td>
+      <Table.Td>
+        Can add/remove issuers, update protocol and score config, update token
+        URIs
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Backend Service Provider</Table.Td>
+      <Table.Td>
+        Orchestrates all on-chain interactions, manages private state, pays gas
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Integrator Protocol</Table.Td>
+      <Table.Td>
+        Any DeFi protocol that consumes Veil trust status before enabling
+        privileged actions
+      </Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>

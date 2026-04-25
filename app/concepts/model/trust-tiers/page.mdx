@@ -1,1 +1,46 @@
-# Local Set-up
+import { Table } from "nextra/components";
+
+<br />
+
+# Trust Tiers
+
+PoT NFT tiers are assigned based on the user's repaymentRatio at the time of minting or renewal:
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Tier</Table.Th>
+      <Table.Th>Threshold (default)</Table.Th>
+      <Table.Th>Token Color</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>Unranked</Table.Td>
+      <Table.Td>below Bronze</Table.Td>
+      <Table.Td>—</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Bronze</Table.Td>
+      <Table.Td>&gt;= 20% repayment ratio</Table.Td>
+      <Table.Td>`markers.bronze`</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Silver</Table.Td>
+      <Table.Td>&gt;= 40% repayment ratio</Table.Td>
+      <Table.Td>`markers.silver`</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Gold</Table.Td>
+      <Table.Td>&gt;= 60% repayment ratio</Table.Td>
+      <Table.Td>`markers.gold`</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Platinum</Table.Td>
+      <Table.Td>&gt;= 80% repayment ratio</Table.Td>
+      <Table.Td>`markers.platinum`</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+Thresholds are stored in `protocolConfig` and can be updated by an admin via `Admin_updatedProtocolConfig`.

@@ -1,0 +1,12 @@
+<br />
+
+# Backend Service Provider
+
+All on-chain interactions in Veil flow through a backend service provider that acts on behalf of users and issuers. This service:
+
+- Abstracts the complexity of ZK proof generation, private state management, and gas payment.
+- Stores private state (credit scores, score accumulators) associated with user Veil IDs.
+- Exposes API endpoints that users and issuers call to trigger contract interactions.
+- Pays gas fees for all transactions on behalf of participants.
+
+This means neither users nor issuers need a Midnight wallet or direct blockchain interaction — they interact with the Veil API, and the backend handles the rest.

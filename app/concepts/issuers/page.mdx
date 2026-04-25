@@ -1,1 +1,20 @@
-# Local Set-up
+<br />
+
+# Issuers
+
+Issuers are registered DeFi protocols that have been approved by the Veil admin to submit behavioral data and verify user trust. They fulfill two roles:
+
+**As data providers:**
+
+- Submit repayment events (paid-on-time flag, amount weight)
+- Submit liquidation events (severity 1–3)
+- Submit protocol usage events (tracks unique protocol diversity)
+- Submit debt state events (active debt flag, risk band)
+
+**As verifiers:**
+
+- Call Veil's verification endpoint with a user's Veil ID or PoT NFT to confirm they meet a specific trust tier before granting access or privileges.
+
+Issuers never learn the real identity of the users they're tracking or verifying — they only - interact with Veil IDs.
+
+To become an issuer, a DeFi protocol must be registered by the Veil admin via Admin_addIssuer. This gating prevents unauthorized parties from polluting the scoring data.

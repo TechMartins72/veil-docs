@@ -1,0 +1,55 @@
+import { Steps } from "nextra/components";
+
+<br />
+
+# End-to-End Walkthrough
+
+Once the CLI is running, you will see a deployment menu followed by the main action menu. Here is the recommended full walkthrough:
+
+<Steps>
+
+### Step 1: Deploy new Veil contract
+
+This deploys the contract and returns the contract address. Take note of it if you plan to reconnect later via "Join deployed Veil contract".
+
+### Step 2: Initialize contract config (admin)
+
+Sets up tier thresholds, score config, token name, and IPFS image URIs. This must be done before any scoring activity.
+
+### Step 3: Add issuer (admin)
+
+Registers a DeFi protocol as an approved issuer. The issuerPk is returned and cached for the session.
+
+### Step 4: User registration: Create score entry (self)
+
+Creates an empty credit score and accumulator in private state with on-chain commitments. This is the equivalent of a user registering their Veil ID.
+
+### Step 5: Submit repayment event
+
+Enter the userPk (auto-resolved from private state), issuerPk (auto-resolved from the cached value), `paidOnTimeFlag` (1 = paid on time, 0 = late), `amountWeight`, and `eventEpoch`.
+
+### Step 6: Submit protocol usage event
+
+Enter userPk, issuerPk, and eventEpoch. Protocol usage is counted once per unique (user, protocol) pair.
+
+### Step 7: Submit liquidation event
+
+Enter userPk, issuerPk, severity (1–3), and eventEpoch.
+
+### Step 8: Mint PoT NFT
+
+Score is recomputed, tier is determined, and a shielded PoT token is minted. If shielded funds are insufficient, the CLI automatically generates dust tokens and retries.
+
+### Step 9: Verify PoT NFT
+
+Enter issuerPk, userPk, a challenge (random bytes), expiry timestamp, and the ownershipSecret (auto-resolved from private state). Returns true if the NFT is valid.
+
+### Step 10: Display ledger state
+
+Join deployed Veil contract
+
+### Step 11: Display private state
+
+Displays the private state (credit scores and accumulators keyed by Veil ID).
+
+</Steps>

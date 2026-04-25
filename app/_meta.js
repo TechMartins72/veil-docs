@@ -1,7 +1,14 @@
 export default {
   introduction: "Introduction",
-  overview: "Overview",
-  "###": {
+  prerequisites: "Prerequisites",
+  concepts: "Concepts",
+  "--": {
     type: "separator",
   },
+  development: "Development",
+  integration: "Integration",
+  "circuits-catalog": "Circuits Catalog",
+  "monorepo-structure": "Monorepo Structure",
+  roadmap: "Roadmap",
+  "security-operational-notes": "Security & Operational Notes",
 };

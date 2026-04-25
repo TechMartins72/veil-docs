@@ -1,1 +1,83 @@
-# Local Set-up
+import { Table } from "nextra/components";
+
+<br />
+
+# Score Computation
+
+The score is computed from the user's accumulated behavior data whenever `recomputeAndPersistScore` is triggered (during mint and renewal). The formula:
+
+<br />
+
+<pre>
+  <code>
+    {`rawScore = baseScore + behaviorScore - penaltyScore
+rawScore = clamp(rawScore, 0, maxScore)`}
+  </code>
+</pre>
+
+**Behavior score components:**
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Component</Table.Th>
+      <Table.Th>Formula</Table.Th>
+      <Table.Th>Config Param</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>Repayment contribution</Table.Td>
+      <Table.Td>`repaymentRatio × repaymentWeight`</Table.Td>
+      <Table.Td>`repaymentWeight`</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Protocol diversity contribution</Table.Td>
+      <Table.Td>`distinctProtocols × protocolWeight`</Table.Td>
+      <Table.Td>`protocolWeight`</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Tenure contribution</Table.Td>
+      <Table.Td>`epochsActive × tenureWeight`</Table.Td>
+      <Table.Td>`tenureWeight`</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+Where `repaymentRatio = (onTimeRepayments / totalRepayments) × scale`, computed off-circuit by the witness and verified inside the circuit with a remainder proof.
+
+**Penalty score components:**
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Component</Table.Th>
+      <Table.Th>Formula</Table.Th>
+      <Table.Th>Config Param</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>Liquidation penalties</Table.Td>
+      <Table.Td>`liquidationPenaltyPoints × liquidationWeight`</Table.Td>
+      <Table.Td>`liquidationWeight`</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Active debt penalty </Table.Td>
+      <Table.Td>`activeDebtFlag × activeDebtPenalty`</Table.Td>
+      <Table.Td>`activeDebtPenalty`</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Risk band penalty</Table.Td>
+      <Table.Td>`riskBand × riskBandWeight`</Table.Td>
+      <Table.Td>`riskBandWeight`</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+**Safety invariants enforced on-chain:**
+
+- Event monotonicity: eventEpoch >= lastEventEpoch (prevents retroactive manipulation)
+- Replay protection: each eventId is hashed with domain tag, user, issuer, and contract address — duplicates are rejected
+- Commitment validation: both the credit score and accumulator must have valid Merkle paths in the on-chain commitment trees before and after each update
+- Score arithmetic: underflow and overflow are asserted before the final value is stored

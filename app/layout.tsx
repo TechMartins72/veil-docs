@@ -1,7 +1,8 @@
 import { Footer, Layout, Navbar } from "nextra-theme-docs";
-import { Banner, Head } from "nextra/components";
+import { Head } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
 import "nextra-theme-docs/style.css";
+import "./globals.css";
 import Image from "next/image";
 
 export const metadata = {
@@ -10,34 +11,21 @@ export const metadata = {
     "Documentation for Veil Credit Scoring, a credit scoring system built on Midnight blockchain technology.",
 };
 
-const navbar = (
-  <Navbar
-    logo={
-      <p className="font-bold">
-        <Image
-          src={"/lucent-labs-logo.png"}
-          alt="Lucent Labs Logo"
-          width={30}
-          height={30}
-        ></Image>
-      </p>
-    }
-  />
-);
+const navbar = <Navbar logo={<p className="font-bold">Veil</p>} />;
 
-const footer = (
-  <Footer className="bg-white">
-    <div className="flex items-center gap-2">
-      <Image
-        src={"/lucent-labs-logo.png"}
-        alt="Lucent Labs Logo"
-        width={30}
-        height={30}
-      ></Image>
-      <p>Powered by Lucent Labs</p>
-    </div>
-  </Footer>
-);
+// const footer = (
+//   <Footer className="dark:bg-[#0a0a0a] bg-[#ededed] w-screen">
+//     <div className="flex items-center gap-2">
+//       <Image
+//         src={"/lucent-labs-logo.png"}
+//         alt="Lucent Labs Logo"
+//         width={30}
+//         height={30}
+//       ></Image>
+//       <p>Powered by Lucent Labs</p>
+//     </div>
+//   </Footer>
+// );
 
 export default async function RootLayout({
   children,

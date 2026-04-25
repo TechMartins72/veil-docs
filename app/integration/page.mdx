@@ -1,1 +1,67 @@
-# Local Set-up
+import { Table } from "nextra/components";
+
+<br />
+
+# Integration Guide for DeFi Protocols
+
+To integrate Veil as a trust filtering layer:
+
+**Becoming an issuer**
+
+Submit a registration request to the Veil admin to call Admin_addIssuer with your protocol name and contract address.
+You will receive an issuerPk — this is your identity within Veil. Keep it secure.
+
+**Submitting behavioral data**
+
+For each significant user action in your protocol, call the relevant Veil API endpoint:
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>User Action</Table.Th>
+      <Table.Th>Veil Event</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>Loan repaid on time</Table.Td>
+      <Table.Td>
+        `Scoring_submitRepaymentEvent` with `paidOnTimeFlag=1`
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Loan repaid late</Table.Td>
+      <Table.Td>
+        `Scoring_submitRepaymentEvent` with `paidOnTimeFlag=0`
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>Position liquidated</Table.Td>
+      <Table.Td>
+        `Scoring_submitLiquidationEvent` with appropriate severity
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>User interacted with your protocol</Table.Td>
+      <Table.Td>`Scoring_submitProtocolUsageEvent`</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+Use the user's Veil ID (not their wallet address) in all calls.
+
+**Verifying user trust status**
+
+Before enabling a privileged action (undercollateralized borrowing, reduced liquidation threshold, fee discount, gated product access):
+
+1. Generate a fresh challenge (32 random bytes) with a short expiry (e.g., 60 seconds from now).
+2. Request the user provide their ownershipSecret (or have the Veil backend resolve it).
+3. Call NFT_verifyPoTNFT(issuerPk, userPk, challenge, expiresAt, ownershipSecret).
+4. Act on the boolean result — true means the user holds a valid, non-expired PoT NFT.
+
+**Policy examples**
+
+- Lending tiers by PoT tier (Bronze → base rate, Gold/Platinum → preferential rate)
+- Undercollateralized borrowing only for Platinum tier
+- Reduced liquidation buffer for consistently high-trust users
+- Protocol access gating for new or unranked users

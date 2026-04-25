@@ -1,0 +1,113 @@
+import { Table } from "nextra/components";
+
+<br />
+
+# Privacy Model: Private vs Public State
+
+Veil's architecture cleanly separates what is private from what is verifiable on-chain:
+
+## Private state
+
+Completely off-ledger, witness-managed — never disclosed on-chain.
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Field</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`creditScores[veilId]`</Table.Td>
+      <Table.Td>Full credit score struct per user</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`scoreAccumulations[veilId]`</Table.Td>
+      <Table.Td>
+        Score accumulators (repayment counts, liquidation points, etc.) per user
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`secretKey`</Table.Td>
+      <Table.Td>User's secret key used to derive their Veil ID</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`ownershipSecret`</Table.Td>
+      <Table.Td>
+        Secondary secret used to prove NFT ownership during verification
+      </Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+## Public state
+
+On-chain — verifiable by anyone, but only updated by Veil's smart contracts.
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Field</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`creditScoreCommitments`</Table.Td>
+      <Table.Td>Historic Merkle tree of credit score commitments</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`scoreAccumulatorCommitments`</Table.Td>
+      <Table.Td>Historic Merkle tree of score accumulator commitments</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`nftRegistry`</Table.Td>
+      <Table.Td>Map of Veil ID → PoT NFT metadata</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`issuers`</Table.Td>
+      <Table.Td>Map of issuer public key → issuer metadata</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`admins`</Table.Td>
+      <Table.Td>Set of admin public keys</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`superAdmin`</Table.Td>
+      <Table.Td>Super admin public key</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`protocolConfig`</Table.Td>
+      <Table.Td>Tier thresholds and NFT validity settings</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`scoreConfig`</Table.Td>
+      <Table.Td>Score formula weights and bounds</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`processedScoreEvents`</Table.Td>
+      <Table.Td>Replay-protection set for scoring events</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`usedVerificationChallenges`</Table.Td>
+      <Table.Td>Replay-protection set for NFT verification challenges</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`issuerTrustWeights`</Table.Td>
+      <Table.Td>Configurable per-issuer penalty multipliers</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`elapsedEpoch`</Table.Td>
+      <Table.Td>Counter of protocol epochs elapsed since deployment</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`tokenIssueCounter`</Table.Td>
+      <Table.Td>Monotonic NFT token ID counter</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+**This split enables a critical guarantee: anyone can verify that a PoT NFT is backed by a valid on-chain commitment without ever seeing the underlying score data.**
+
+This is the core of Veil's privacy model, ensuring users can prove their creditworthiness without revealing sensitive information on-chain.

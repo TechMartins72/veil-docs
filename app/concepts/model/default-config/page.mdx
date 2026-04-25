@@ -1,1 +1,31 @@
-# Local Set-up
+<br />
+
+# Default Configuration
+
+The CLI initializes the contract with these defaults (adjustable by admin):
+
+```bash
+
+ScoreConfig:
+  baseScore:             300
+  maxScore:              900
+  scale:                 100
+  repaymentWeight:       2
+  protocolWeight:        10
+  tenureWeight:          1
+  liquidationWeight:     3
+  activeDebtPenalty:     5
+  riskBandWeight:        5
+  maxScoreDeltaPerEpoch: 50
+
+ProtocolConfig:
+  bronzeThreshold:       20  (repaymentRatio %)
+  silverThreshold:       40
+  goldThreshold:         60
+  platinumThreshold:     80
+  maxLiquidationsAllowed: 3
+  nftEpochValidity:      12  (epochs, approx. 60 days at 5-day epoch)
+
+Epoch duration: 432,000,000 ms (5 days)
+
+```

@@ -1,1 +1,61 @@
-# Local Set-up
+import { Steps } from "nextra/components";
+
+<br />
+
+# Protocol Lifecycle
+
+<Steps>
+
+### Contract Deployment
+
+Sets nonce, epoch duration (5 days), domain separator, and derives super admin pk.
+
+### Admin Setup
+
+- `Admin_addIssuer` → registers DeFi protocol as approved issuer, returns `issuerPk`
+- `Utils_initializeContractConfigurations` → sets token metadata, tier thresholds, score weights
+
+### User Registration
+
+- User generates Veil ID off-chain from secret key
+- `Scoring_createScoreEntry(veilId)` → creates empty score + accumulator in private state, commits both on-chain
+
+### Behavior Accumulation
+
+Repeated over time as user interacts with DeFi protocols:
+
+- `Scoring_submitRepaymentEvent` → updates accumulator: `onTimeCount` / `lateCount` / `weightedRepaymentVolume`
+- `Scoring_submitLiquidationEvent` → updates accumulator: `liquidationCount` / `liquidationPenaltyPoints`
+- `Scoring_submitProtocolUsageEvent` → updates accumulator: `distinctProtocols` (counted once per unique protocol)
+- `Scoring_submitDebtStateEvent` → updates accumulator: `activeDebtFlag` / `riskBand`
+
+### PoT NFT Minting
+
+`NFT_mintPoTNFT()` executes the following sequence:
+
+1. Triggers lazy epoch update (`computeCurrentEpoch`)
+2. Recomputes score from accumulators + config (`recomputeAndPersistScore`)
+3. Validates score commitment against on-chain Merkle tree
+4. Determines trust tier from repayment ratio
+5. Mints shielded token, stores NFT metadata in `nftRegistry`
+
+### NFT Verification
+
+`NFT_verifyPoTNFT(issuerPk, veilId, challenge, expiresAt, ownershipSecret)` called by issuer:
+
+1. Checks issuer is registered and approved
+2. Confirms NFT exists in `nftRegistry`
+3. Validates replay-protection challenge
+4. Verifies ownership commitment
+5. Auto-revokes if NFT has expired
+6. Returns `Boolean` — `true` = valid and not expired
+
+### NFT Renewal
+
+`NFT_renewPoTNFT(token)` executes the following sequence:
+
+1. Burns old PoT token
+2. Recomputes score and determines new tier
+3. Issues new PoT token with updated metadata and extended expiry
+
+</Steps>

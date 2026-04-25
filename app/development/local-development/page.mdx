@@ -1,1 +1,66 @@
-# Local Set-up
+<br />
+
+# Local Development Setup
+
+### Clone the repository
+
+```sh
+git clone https://github.com/codeBigInt/veil-credit-scoring.git
+cd veil-credit-scoring-protocol
+```
+
+### Install dependencies
+
+From the root of the project:
+
+```sh
+bun install
+```
+
+This installs dependencies for all packages in the monorepo.
+
+### Compile and build the contract
+
+```sh
+cd packages/contract
+```
+
+Run the full Compact compilation (generates ZK circuit artifacts):
+
+```sh
+bun compile
+```
+
+Run the contract test suite:
+
+```sh
+bun test
+```
+
+Build the TypeScript distribution artifacts (required by the CLI):
+
+```sh
+bun build
+```
+
+**Why this order matters:**
+
+- bun compile generates the managed contract files under src/managed/ that the TypeScript build and tests depend on.
+- bun test validates protocol logic against the compiled circuits.
+- bun build produces dist/ which the CLI imports at runtime.
+
+### Build the CLI
+
+Navigate to the CLI package:
+
+```sh
+cd ../cli
+```
+
+Build the CLI:
+
+```sh
+bun build
+```
+
+This compiles the CLI TypeScript code and prepares it for execution.

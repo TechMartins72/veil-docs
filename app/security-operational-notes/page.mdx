@@ -1,1 +1,11 @@
-# Local Set-up
+<br />
+
+# Security and Operational Notes
+
+- **Issuer authorization:** Every score-affecting circuit asserts `LedgerStates_issuers.member(issuerPk)` before processing. Unregistered parties cannot submit events.
+- **Replay protection:** All scoring events are deduplicated via a domain-tagged persistent hash of (`domainTag, eventId, userPk, issuerPk, contractAddress`). Verification challenges are similarly deduplicated.
+- **Commitment integrity:** Before any state update, both the credit score and accumulator commitments are validated against on-chain Merkle tree roots. After update, new commitments replace old ones atomically.
+- **Epoch monotonicity:** `eventEpoch >= acc.lastEventEpoch` is enforced on every event submission. Events cannot be backdated.
+- **Ownership proof:** PoT NFT verification requires the user to provide `ownershipSecret`, from which `persistentCommit(veilId, ownershipSecret)` is recomputed and checked against the stored `ownershipCommitment`. Neither Veil nor the issuer ever learns the secret.
+- **Dev defaults:** The CLI uses a hardcoded private state password (`veil-credit-Test-2026!`) and the genesis wallet seed. These are intentional development shortcuts and must not be used in production deployments.
+- **Scaffolded paths:** `Scoring_submitDebtStateEvent` and the `recomputeAndReturnScore` standalone circuit are implemented in the contract but currently commented out of the CLI menu. They are planned for full activation in upcoming releases.

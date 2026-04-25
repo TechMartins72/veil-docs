@@ -1,1 +1,42 @@
-# Local Set-up
+import { Steps, Callout } from "nextra/components";
+
+<br />
+
+# Roadmap
+
+<Callout type="info">
+  Veil is under active development. The following items represent planned
+  improvements and future directions.
+</Callout>
+
+<Steps>
+
+### Activate Debt State Flow
+
+Activate scaffolded `submitDebtStateEvent` flow in the CLI and backend service.
+
+### Production Backend Service
+
+Ship production backend scoring service with encrypted private-state storage and stable API surface.
+
+### Per-Issuer Trust Weight Configuration
+
+Introduce per-issuer trust weight configuration — currently stored in `issuerTrustWeights` but not yet surfaced through an admin circuit.
+
+### Open Trust Status Standards
+
+Define and publish open trust status standards for Midnight ecosystem protocols to consume Veil as a shared compliance layer.
+
+### Expanded Integration Examples
+
+Expand integration examples:
+
+- Undercollateralized lending
+- Derivatives access gating
+- Reputation-aware liquidity provisioning
+
+### Cross-Ecosystem Compliance Layer
+
+Explore Veil as a privacy-based compliance layer for protocols outside of Midnight as the ecosystem matures.
+
+</Steps>

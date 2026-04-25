@@ -1,1 +1,15 @@
-# Local Set-up
+import { Callout } from "nextra/components";
+
+<br />
+
+# The Veil ID
+
+A **Veil ID** (also referred to as userPk throughout the codebase) is a deterministic, anonymous public key that identifies a user within the Veil protocol. It is derived from the user's secret key using a domain-separated persistent hash:
+
+```bash
+  veilId = persistentHash(["veil:user", secretKey, contractAddress])
+```
+
+The secret key is stored off-chain only by the user (never disclosed to the protocol). The Veil ID is what gets stored on-chain in commitments, ensuring the protocol can track behavior without ever linking it back to a real-world identity or wallet address.
+
+Users generate their Veil ID off-chain and use it when calling Veil's API endpoints to register and interact with the protocol.

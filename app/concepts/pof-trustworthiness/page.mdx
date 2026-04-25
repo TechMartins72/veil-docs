@@ -1,0 +1,62 @@
+<br />
+
+# Proof of Trustworthiness (PoT) NFT
+
+## Minting
+
+A user calls `NFT_mintPoTNFT()` after accumulating sufficient behavior data. The circuit:
+
+1. Derives the user's Veil ID from their local secret key.
+2. Triggers a lazy epoch update to advance the protocol clock.
+3. Recomputes and persists the user's credit score from their current accumulators.
+4. Validates the score commitment against the on-chain Merkle tree.
+5. Determines the trust tier (Unranked → Platinum) based on repayment ratio vs. config thresholds.
+6. Mints a shielded token using the domain separator `"veil:protocol:nft"`.
+7. Stores NFT metadata in the public `nftRegistry` under the user's Veil ID, including:
+   - Token URI (IPFS link resolving to tier-appropriate image)
+   - Token ID (from `tokenIssueCounter`)
+   - Tier snapshot
+   - Mint timestamp
+   - Expiry epoch (`epochLastUpdateTimeStamp + EPOCH_DURATION`)
+   - Credit score commitment hash
+   - Ownership commitment (`persistentCommit(veilId, ownershipSecret`)
+
+The shielded token itself serves as the bearer credential; the registry entry enables on-chain verification without revealing user identity.
+
+## Verification
+
+Issuers call `NFT_verifyPoTNFT(issuerPk, veilId, challenge, challengeExpiresAt, ownershipSecret)` to validate a user's trust status. The circuit:
+
+1. Confirms the calling issuer is registered and approved.
+2. Checks the user has an NFT in `nftRegistry`.
+3. Computes a challenge hash (domain-tagged, per-user, per-issuer) and asserts it has not been used before (replay protection).
+4. Verifies the ownership commitment: `persistentCommit(veilId, ownershipSecret) == nftMetadata.ownershipCommitment`.
+5. Validates the stored credit score commitment against the on-chain Merkle tree.
+6. Checks the challenge has not expired (`challengeExpiresAt >= currentTime`).
+7. Auto-revokes the NFT if `nftMetadata.expiresAtEpoch < currentTime` and returns `false`.
+8. Returns `true` if the NFT is valid, active, and not revoked.
+
+The verification result is a boolean: the protocol learns only whether the user passes (no score value, no identity).
+
+## Revocation
+
+NFTs can be revoked by:
+
+Expiry: auto-revoked during any verification call if the current time exceeds `expiresAtEpoch`.
+Admin action: `revokePoTNFT(veilId, adminPk)` allows an authorized admin to revoke a specific user's NFT (for example, in response to detected misconduct outside the protocol's event system).
+
+Revoked NFTs cause `verifyPoTNFT` to return `false`.
+
+## Time-Bound Validity and Renewal
+
+PoT NFTs expire after `nftEpochValidity` epochs (default: 12 epochs ≈ 60 days). This is intentional: requiring periodic renewal ensures the trust signal reflects ongoing good behavior, not just a historical snapshot.
+
+### Renewal flow (`NFT_renewPoTNFT`):
+
+1. User provides their existing shielded PoT token.
+2. The circuit verifies the token color matches the Veil domain separator.
+3. Recomputes the credit score and determines the new tier.
+4. Burns the old token (`sendImmediateShielded` to the burn address).
+5. Mints a fresh token with updated metadata and a new expiry.
+
+If a user does not renew before expiry, their NFT is automatically revoked during the next verification call.

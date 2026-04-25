@@ -1,1 +1,150 @@
-# Local Set-up
+import { Table } from "nextra/components";
+
+<br />
+
+# Circuits Catalog
+
+### Admin Circuits (`packages/contract/src/modules/Admin.compact`)
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Circuit Signature</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`Admin_addIssuer(protocolName, contractAddress) → issuerPk: Bytes<32>`</Table.Td>
+      <Table.Td>Registers a new issuer and returns their derived public key. Requires super admin or admin authorization.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Admin_removeIssuer(issuerPk)`</Table.Td>
+      <Table.Td>Removes a registered issuer.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Admin_addAdmin(adminPk)`</Table.Td>
+      <Table.Td>Grants admin privileges to a new key. Only callable by super admin.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Admin_removeAdmin(adminPk)`</Table.Td>
+      <Table.Td>Revokes admin privileges.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Admin_updatedProtocolConfig(updatedConfig: ProtocolConfig)`</Table.Td>
+      <Table.Td>Updates tier thresholds and NFT validity.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Admin_updatedScoreConfig(updatedScoreConfig: ScoreConfig)`</Table.Td>
+      <Table.Td>Updates score formula weights and bounds.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Admin_updateTokenUris(tokenImageUris, scoreConfig)`</Table.Td>
+      <Table.Td>Updates IPFS URIs for tier token images.</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+### NFT Circuits (`packages/contract/src/modules/PoTNFT.compact`)
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Circuit Signature</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`Scoring_createScoreEntry(userPk: Bytes<32>)`</Table.Td>
+      <Table.Td>Initializes an empty credit score and accumulator in private state; commits both on-chain. One entry per Veil ID.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Scoring_submitRepaymentEvent(userPk, issuerPk, paidOnTimeFlag: 0|1, amountWeight, eventEpoch, eventId)`</Table.Td>
+      <Table.Td>Records a loan repayment. Updates `onTimeCount`, `lateCount`, `weightedRepaymentVolume`.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Scoring_submitLiquidationEvent(userPk, issuerPk, severity: 1–3, eventEpoch, eventId)`</Table.Td>
+      <Table.Td>Records a liquidation. Penalty scaled by `severity × issuerTrustWeight`.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Scoring_submitProtocolUsageEvent(userPk, issuerPk, protocolId, eventEpoch)`</Table.Td>
+      <Table.Td>Records a unique protocol interaction. Each `(user, protocol)` pair counted once.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Scoring_submitDebtStateEvent(userPk, issuerPk, activeDebtFlag: 0|1, riskBand: 0–3, eventEpoch, eventId)`</Table.Td>
+      <Table.Td>Records debt state snapshot. Currently scaffolded in the CLI but contract logic is complete.</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+### Utility Circuits (`packages/contract/src/modules/Utils.compact`)
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Circuit Signature</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`NFT_mintPoTNFT() → []`</Table.Td>
+      <Table.Td>
+        Recomputes score, determines tier, mints shielded PoT token, registers
+        metadata.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`NFT_renewPoTNFT(token: ShieldedCoinInfo)`</Table.Td>
+      <Table.Td>
+        Burns old PoT token, recomputes score, mints fresh token with extended
+        expiry.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>
+        `NFT_verifyPoTNFT(issuerPk, userPk, challenge, challengeExpiresAt,
+        ownershipSecret) → Boolean`
+      </Table.Td>
+      <Table.Td>
+        Verifies NFT validity. Returns `true` = valid, `false` =
+        expired/revoked.
+      </Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`revokePoTNFT(userPk, adminPk)`</Table.Td>
+      <Table.Td>Admin-only forced revocation.</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+### Utility Circuits (`packages/contract/src/modules/Utils.compact`)
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>Circuit Signature</Table.Th>
+      <Table.Th>Description</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>`Utils_initializeContractConfigurations(tokenImageUris, tokenName, protocolConfig, scoreConfig, tokenMarkers)`</Table.Td>
+      <Table.Td>One-time initialization of all protocol parameters.</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>`Utils_generateUserPk(sk: Bytes<32>) → Bytes<32>`</Table.Td>
+      <Table.Td>Derives a Veil ID from a secret key. Domain: `"veil:user"`.</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+Internal utility circuits (not directly callable as entry points):
+
+- `generateIssuerPk` — derives issuer key from secret: domain `"veil:issuer"`
+- `generateAdminPk` — derives admin key: domain `"veil:superadmin"`
+- `assertAuthorization` — checks caller's derived key against `superAdmin` ledger state
+- `recomputeAndPersistScore` — full score recomputation pipeline with commitment updates
+- `computeCurrentEpoch` — lazy epoch advancement based on block timestamp
+- `mintAndSendToken` — shielded token issuance with nonce evolution
