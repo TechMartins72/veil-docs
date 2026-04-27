@@ -6,7 +6,7 @@ export default {
     type: "separator",
   },
   development: "Development",
-  integration: "Integration",
+  "api-integration-guide": "API Integration Guide",
   "circuits-catalog": "Circuits Catalog",
   "monorepo-structure": "Monorepo Structure",
   roadmap: "Roadmap",

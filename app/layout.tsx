@@ -1,9 +1,16 @@
 import { Layout, Navbar } from "nextra-theme-docs";
 import { Head } from "nextra/components";
 import { getPageMap } from "nextra/page-map";
-import {SearchWithCallback} from "./components/Search";
+import { SearchWithCallback } from "./components/Search";
+import { Inter } from "next/font/google";
 import "nextra-theme-docs/style.css";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata = {
   title: "Veil Credit Scoring Documentation",
@@ -13,8 +20,6 @@ export const metadata = {
 
 const navbar = <Navbar logo={<p className="font-bold">Veil</p>} />;
 
-
-
 export default async function RootLayout({
   children,
 }: {
@@ -22,16 +27,12 @@ export default async function RootLayout({
 }) {
   return (
     <html
-      // Not required, but good for SEO
       lang="en"
-      // Required to be set
       dir="ltr"
-      // Suggested by `next-themes` package https://github.com/pacocoursey/next-themes#with-app
       suppressHydrationWarning
+      className={inter.variable}
     >
-      <Head>
-        {/* Your additional tags should be passed as `children` of `<Head>` element */}
-      </Head>
+      <Head />
       <body>
         <Layout
           navbar={navbar}
@@ -44,8 +45,6 @@ export default async function RootLayout({
             labels: "",
             link: "https://github.com/codeBigInt/veil-credit-scoring/issues/new?title=Feedback%20for%20%E2%80%9CVeil%20Credit%20Scoring%E2%80%9D&labels=feedback",
           }}
-          // footer={footer}
-          // ... Your additional layout options
         >
           {children}
         </Layout>
